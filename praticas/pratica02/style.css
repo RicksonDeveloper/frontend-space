@@ -1,0 +1,195 @@
+/* 1. Configurações Globais e Reset */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Segoe UI', Arial, sans-serif;
+}
+
+body {
+    background-color: #ffffff;
+    color: #333;
+    line-height: 1.6;
+}
+
+/* Container que define a largura máxima e o alinhamento central */
+.container {
+    max-width: 1100px;
+    margin: 0 auto;
+    padding: 0 20px; /* Margem interna lateral igual para todo o site */
+}
+
+/* 2. Header */
+.header {
+    padding: 20px 0;
+    border-bottom: 1px solid #f0f0f0;
+}
+
+.navbar {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.logo {
+    font-size: 24px;
+    font-weight: 800;
+}
+
+.logo span {
+    font-weight: 300;
+}
+
+.cart-icon {
+    font-size: 1.5rem;
+    color: #2ecc71;
+    cursor: pointer;
+}
+
+/* 3. Section Hero (Fundo Preto) */
+.hero-tech {
+    background-color: #000000; /* Preto Puro solicitado */
+    padding: 80px 0;
+    text-align: center;
+}
+
+.hero-content p {
+    color: #ffffff;
+    font-size: 1.1rem;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    margin-bottom: 10px;
+}
+
+.hero-content h2 {
+    color: #00d2ff; /* Azul Neon */
+    font-size: 3.5rem;
+    font-weight: 900;
+    text-transform: none;
+}
+
+/* 4. Título da Seção de Produtos */
+.section-title {
+    text-align: center;
+    margin: 60px 0 40px;
+    font-size: 1.3rem;
+    font-weight: 800;
+    text-transform: uppercase;
+}
+
+/* 5. Grid de Produtos */
+.product-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 30px;
+    margin-bottom: 60px;
+}
+
+/* 6. Card de Produto */
+.product-card {
+    border: 1px solid #e8e8e8;
+    padding: 25px;
+    text-align: center;
+    display: flex;
+    flex-direction: column;
+    background: #fff;
+    transition: transform 0.2s ease;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    border-color: #ddd;
+}
+
+/* Imagens com tamanho fixo e alinhadas */
+.product-card img {
+    width: 100%;
+    height: 200px; /* Altura fixa para todas as imagens */
+    object-fit: contain; /* Não distorce a imagem */
+    margin-bottom: 20px;
+}
+
+.product-card h3 {
+    font-size: 0.95rem;
+    color: #666;
+    margin-bottom: 10px;
+    min-height: 40px; /* Alinha os preços mesmo com títulos curtos */
+}
+
+.old-price {
+    text-decoration: line-through;
+    color: #ff7675;
+    font-size: 0.9rem;
+    display: block;
+}
+
+.new-price {
+    color: #2ecc71;
+    font-weight: 800;
+    font-size: 1.4rem;
+    margin-bottom: 15px;
+    display: block;
+}
+
+.btn-add {
+    background-color: #888;
+    color: white;
+    border: none;
+    padding: 12px;
+    width: 100%;
+    cursor: pointer;
+    font-weight: bold;
+    font-size: 0.8rem;
+    text-transform: uppercase;
+    margin-top: auto; /* Garante que o botão fique no final do card */
+}
+
+.btn-add:hover {
+    background-color: #444;
+}
+
+/* 7. Footer */
+.footer {
+    background-color: #221f1f; /* Cinza muito escuro próximo ao preto */
+    color: #fff;
+    padding: 50px 0;
+}
+
+.footer-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 40px;
+}
+
+.footer h4 {
+    margin-bottom: 20px;
+    font-size: 1rem;
+    font-weight: bold;
+}
+
+.footer ul {
+    list-style: none;
+}
+
+.footer ul li, .footer p {
+    color: #bbb;
+    font-size: 0.85rem;
+    margin-bottom: 10px;
+}
+
+.social-icons {
+    display: flex;
+    gap: 12px;
+}
+
+.social-icons span {
+    font-size: 1.3rem;
+    cursor: pointer;
+}
+
+/* Responsividade Básica */
+@media (max-width: 768px) {
+    .hero-content h2 {
+        font-size: 2.5rem;
+    }
+}
