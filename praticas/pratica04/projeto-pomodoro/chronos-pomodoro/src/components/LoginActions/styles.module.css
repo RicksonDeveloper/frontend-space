@@ -1,0 +1,29 @@
+.actions {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 1.2rem;
+  margin-top: 1.8rem;
+}
+
+.linkButton {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--login-primary);
+  font: inherit;
+  font-weight: 750;
+  text-align: left;
+}
+
+.linkButton:hover,
+.linkButton:focus-visible {
+  color: var(--login-accent);
+  text-decoration: underline;
+}
+
+@media (max-width: 480px) {
+  .actions {
+    flex-direction: column;
+  }
+}

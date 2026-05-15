@@ -1,0 +1,32 @@
+.field {
+  display: grid;
+  gap: 0.8rem;
+  margin-bottom: 1.8rem;
+}
+
+.field label {
+  color: var(--login-text);
+  font-size: 1.4rem;
+  font-weight: 750;
+}
+
+.field input {
+  width: 100%;
+  border: 1px solid var(--login-border);
+  border-radius: 0.8rem;
+  padding: 1.4rem 1.5rem;
+  outline: 3px solid transparent;
+  background: #fbfcfd;
+  color: var(--login-text);
+  font: inherit;
+  transition:
+    border-color 0.2s ease,
+    outline-color 0.2s ease,
+    background 0.2s ease;
+}
+
+.field input:focus {
+  border-color: var(--login-primary);
+  outline-color: rgba(17, 107, 99, 0.15);
+  background: #fff;
+}
