@@ -6,39 +6,75 @@ import { TimerWorkerManager } from '../../workers/TimerWorkerManager';
 import { TaskActionTypes } from './taskActions';
 import { loadBeep } from '../../utils/loadBeep';
 import type { TaskStateModel } from '../../models/TaskStateModel';
+import { chronosApi } from '../../services/chronosApi';
+import { useAuth } from '../AuthContext';
 
 type TaskContextProviderProps = {
   children: React.ReactNode;
 };
 
 export function TaskContextProvider({ children }: TaskContextProviderProps) {
-  const [state, dispatch] = useReducer(taskReducer, initialTaskState, () => {
-    const storageState = localStorage.getItem('state');
-
-    if (storageState === null) return initialTaskState;
-
-    const parsedStorageState = JSON.parse(storageState) as TaskStateModel;
-
-    return {
-      ...parsedStorageState,
-      activeTask: null,
-      secondsRemaining: 0,
-      formattedSecondsRemaining: '00:00',
-    };
-  });
+  const { isAuthenticated, user } = useAuth();
+  const [state, dispatch] = useReducer(taskReducer, initialTaskState);
 
   const playBeepRef = useRef<ReturnType<typeof loadBeep> | null>(null);
+  const activeTaskRef = useRef(state.activeTask);
 
   const worker = TimerWorkerManager.getInstance();
+
+  useEffect(() => {
+    activeTaskRef.current = state.activeTask;
+  }, [state.activeTask]);
+
+  useEffect(() => {
+    async function loadApiState() {
+      if (!isAuthenticated) {
+        dispatch({ type: TaskActionTypes.RESET_STATE });
+        return;
+      }
+
+      try {
+        const [settings, tasks] = await Promise.all([
+          chronosApi.getSettings(),
+          chronosApi.getTasks(),
+        ]);
+
+        dispatch({
+          type: TaskActionTypes.CHANGE_SETTINGS,
+          payload: settings,
+        });
+        dispatch({
+          type: TaskActionTypes.SET_TASKS,
+          payload: tasks,
+        });
+      } catch {
+        const storageState = localStorage.getItem(`state:${user?.id ?? 'anonymous'}`);
+
+        if (storageState) {
+          dispatch({
+            type: TaskActionTypes.SET_TASKS,
+            payload: (JSON.parse(storageState) as TaskStateModel).tasks,
+          });
+        }
+      }
+    }
+
+    loadApiState();
+  }, [isAuthenticated, user?.id]);
 
   useEffect(() => {
     worker.onmessage(e => {
       const countDownSeconds = e.data;
 
       if (countDownSeconds <= 0) {
+        const activeTask = activeTaskRef.current;
+
         if (playBeepRef.current) {
           playBeepRef.current();
           playBeepRef.current = null;
+        }
+        if (activeTask) {
+          chronosApi.completeTask(activeTask.id).catch(() => null);
         }
         dispatch({
           type: TaskActionTypes.COMPLETE_TASK,
@@ -54,7 +90,9 @@ export function TaskContextProvider({ children }: TaskContextProviderProps) {
   }, [worker]);
 
   useEffect(() => {
-    localStorage.setItem('state', JSON.stringify(state));
+    if (isAuthenticated && user) {
+      localStorage.setItem(`state:${user.id}`, JSON.stringify(state));
+    }
 
     if (!state.activeTask) {
       worker.terminate();

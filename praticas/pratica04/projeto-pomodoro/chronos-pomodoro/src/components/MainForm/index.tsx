@@ -10,13 +10,14 @@ import { getNextCycleType } from '../../utils/getNextCycleType';
 import { TaskActionTypes } from '../../contexts/TaskContext/taskActions';
 import { Tips } from '../Tips';
 import { showMessage } from '../../adapters/showMessage';
+import { chronosApi } from '../../services/chronosApi';
 
 export function MainForm() {
   const { state, dispatch } = useTaskContext();
   const taskNameInput = useRef<HTMLInputElement>(null);
   const lastTaskName = state.tasks[state.tasks.length - 1]?.name || '';
 
-  function handleCreateNewTask(event: React.FormEvent<HTMLFormElement>) {
+  async function handleCreateNewTask(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
     showMessage.dismiss();
 
@@ -42,12 +43,24 @@ export function MainForm() {
       type: nextCyleType,
     };
 
-    dispatch({ type: TaskActionTypes.START_TASK, payload: newTask });
-    showMessage.success('Tarefa iniciada');
+    try {
+      await chronosApi.createTask(newTask);
+      showMessage.success('Tarefa iniciada');
+    } catch {
+      showMessage.warn('API indisponivel. Tarefa iniciada apenas localmente.');
+    } finally {
+      dispatch({ type: TaskActionTypes.START_TASK, payload: newTask });
+    }
   }
 
   function handleInterruptTask() {
     showMessage.dismiss();
+    const activeTask = state.activeTask;
+
+    if (activeTask) {
+      chronosApi.interruptTask(activeTask.id).catch(() => null);
+    }
+
     showMessage.error('Tarefa interrompida!');
     dispatch({ type: TaskActionTypes.INTERRUPT_TASK });
   }

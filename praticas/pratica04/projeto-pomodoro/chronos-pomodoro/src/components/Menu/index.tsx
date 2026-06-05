@@ -1,6 +1,7 @@
 import {
   HistoryIcon,
   HouseIcon,
+  LogOutIcon,
   MoonIcon,
   SettingsIcon,
   SunIcon,
@@ -8,10 +9,14 @@ import {
 import styles from './styles.module.css';
 import { useState, useEffect } from 'react';
 import { RouterLink } from '../RouterLink';
+import { useAuth } from '../../contexts/AuthContext';
+import { useNavigate } from 'react-router';
 
 type AvailableThemes = 'dark' | 'light';
 
 export function Menu() {
+  const { logout } = useAuth();
+  const navigate = useNavigate();
   const [theme, setTheme] = useState<AvailableThemes>(() => {
     const storageTheme =
       (localStorage.getItem('theme') as AvailableThemes) || 'dark';
@@ -38,6 +43,14 @@ export function Menu() {
     document.documentElement.setAttribute('data-theme', theme);
     localStorage.setItem('theme', theme);
   }, [theme]);
+
+  async function handleLogout(
+    event: React.MouseEvent<HTMLAnchorElement, MouseEvent>,
+  ) {
+    event.preventDefault();
+    await logout();
+    navigate('/login/', { replace: true });
+  }
 
   return (
     <nav className={styles.menu}>
@@ -76,6 +89,16 @@ export function Menu() {
         onClick={handleThemeChange}
       >
         {nextThemeIcon[theme]}
+      </a>
+
+      <a
+        className={styles.menuLink}
+        href='#'
+        aria-label='Sair'
+        title='Sair'
+        onClick={handleLogout}
+      >
+        <LogOutIcon />
       </a>
     </nav>
   );

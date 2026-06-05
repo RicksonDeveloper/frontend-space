@@ -16,6 +16,7 @@ export const TaskActionTypes = {
   COUNT_DOWN: 'COUNT_DOWN',
   COMPLETE_TASK: 'COMPLETE_TASK',
   CHANGE_SETTINGS: 'CHANGE_SETTINGS',
+  SET_TASKS: 'SET_TASKS',
 } as const;
 
 export type TaskActionTypes =
@@ -33,6 +34,10 @@ export type TaskActionsWithPayload =
   | {
     type: typeof TaskActionTypes.CHANGE_SETTINGS;
     payload: TaskStateModel['config'];
+  }
+  | {
+    type: typeof TaskActionTypes.SET_TASKS;
+    payload: TaskModel[];
   };
 
 export type TaskActionsWithoutPayload =

@@ -12,6 +12,7 @@ import { sortTasks, type SortTasksOptions } from '../../utils/sortTasks';
 import { useEffect, useState } from 'react';
 import { TaskActionTypes } from '../../contexts/TaskContext/taskActions';
 import { showMessage } from '../../adapters/showMessage';
+import { chronosApi } from '../../services/chronosApi';
 
 export function History() {
   const { state, dispatch } = useTaskContext();
@@ -40,14 +41,31 @@ export function History() {
   }, [state.tasks]);
 
   useEffect(() => {
-    document.title = 'Histórico - Chronos Pomodoro';
+    document.title = 'Historico - Chronos Pomodoro';
   }, []);
+
+  useEffect(() => {
+    async function loadTasks() {
+      try {
+        const tasks = await chronosApi.getTasks();
+        dispatch({
+          type: TaskActionTypes.SET_TASKS,
+          payload: tasks,
+        });
+      } catch {
+        showMessage.warn('API indisponivel. Exibindo historico local.');
+      }
+    }
+
+    loadTasks();
+  }, [dispatch]);
 
   useEffect(() => {
     if (!confirmClearHistory) return;
 
     setConfirmClearHistory(false);
 
+    chronosApi.clearTasks().catch(() => null);
     dispatch({ type: TaskActionTypes.RESET_STATE });
   }, [confirmClearHistory, dispatch]);
 
@@ -82,14 +100,14 @@ export function History() {
     <MainTemplate>
       <Container>
         <Heading>
-          <span>History</span>
+          <span>Historico</span>
           {hasTasks && (
             <span className={styles.buttonContainer}>
               <DefaultButton
                 icon={<TrashIcon />}
                 color='red'
-                aria-label='Apagar todo o histórico'
-                title='Apagar histórico'
+                aria-label='Apagar todo o historico'
+                title='Apagar historico'
                 onClick={handleResetHistory}
               />
             </span>
@@ -107,19 +125,19 @@ export function History() {
                     onClick={() => handleSortTasks({ field: 'name' })}
                     className={styles.thSort}
                   >
-                    Tarefa ↕
+                    Tarefa
                   </th>
                   <th
                     onClick={() => handleSortTasks({ field: 'duration' })}
                     className={styles.thSort}
                   >
-                    Duração ↕
+                    Duracao
                   </th>
                   <th
                     onClick={() => handleSortTasks({ field: 'startDate' })}
                     className={styles.thSort}
                   >
-                    Data ↕
+                    Data
                   </th>
                   <th>Status</th>
                   <th>Tipo</th>
@@ -149,7 +167,7 @@ export function History() {
         )}
         {!hasTasks && (
           <p style={{ textAlign: 'center', fontWeight: 'bold' }}>
-            Ainda não existem tarefas criadas.
+            Ainda nao existem tarefas criadas.
           </p>
         )}
       </Container>

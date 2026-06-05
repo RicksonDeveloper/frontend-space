@@ -66,6 +66,9 @@ export function taskReducer(
     case TaskActionTypes.CHANGE_SETTINGS: {
       return { ...state, config: { ...action.payload } };
     }
+    case TaskActionTypes.SET_TASKS: {
+      return { ...state, tasks: [...action.payload] };
+    }
   }
 
   // Sempre deve retornar o estado

@@ -8,6 +8,7 @@ import { useTaskContext } from '../../contexts/TaskContext/useTaskContext';
 import { useEffect, useRef } from 'react';
 import { showMessage } from '../../adapters/showMessage';
 import { TaskActionTypes } from '../../contexts/TaskContext/taskActions';
+import { chronosApi } from '../../services/chronosApi';
 
 export function Settings() {
   const { state, dispatch } = useTaskContext();
@@ -16,11 +17,10 @@ export function Settings() {
   const longBreakTimeInput = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
-    document.title = 'Configurações - Chronos Pomodoro';
+    document.title = 'Configuracoes - Chronos Pomodoro';
   }, []);
 
-
-  function handleSaveSettings(e: React.FormEvent<HTMLFormElement>) {
+  async function handleSaveSettings(e: React.FormEvent<HTMLFormElement>) {
     e.preventDefault();
     showMessage.dismiss();
 
@@ -31,7 +31,7 @@ export function Settings() {
     const longBreakTime = Number(longBreakTimeInput.current?.value);
 
     if (isNaN(workTime) || isNaN(shortBreakTime) || isNaN(longBreakTime)) {
-      formErrors.push('Digite apenas números para TODOS os campos');
+      formErrors.push('Digite apenas numeros para TODOS os campos');
     }
 
     if (workTime < 1 || workTime > 99) {
@@ -53,26 +53,37 @@ export function Settings() {
       return;
     }
 
-    dispatch({
-      type: TaskActionTypes.CHANGE_SETTINGS,
-      payload: {
-        workTime,
-        shortBreakTime,
-        longBreakTime,
-      },
-    });
-    showMessage.success('Configurações salvas');
+    const newSettings = {
+      workTime,
+      shortBreakTime,
+      longBreakTime,
+    };
+
+    try {
+      const savedSettings = await chronosApi.updateSettings(newSettings);
+      dispatch({
+        type: TaskActionTypes.CHANGE_SETTINGS,
+        payload: savedSettings,
+      });
+      showMessage.success('Configuracoes salvas');
+    } catch {
+      dispatch({
+        type: TaskActionTypes.CHANGE_SETTINGS,
+        payload: newSettings,
+      });
+      showMessage.warn('API indisponivel. Configuracoes salvas apenas localmente.');
+    }
   }
 
   return (
     <MainTemplate>
       <Container>
-        <Heading>Configurações</Heading>
+        <Heading>Configuracoes</Heading>
       </Container>
 
       <Container>
         <p style={{ textAlign: 'center' }}>
-          Modifique as configurações para tempo de foco, descanso curso e
+          Modifique as configuracoes para tempo de foco, descanso curto e
           descanso longo.
         </p>
       </Container>
@@ -84,6 +95,7 @@ export function Settings() {
               id='workTime'
               labelText='Foco'
               ref={workTimeInput}
+              key={`work-${state.config.workTime}`}
               defaultValue={state.config.workTime}
               type='number'
             />
@@ -93,6 +105,7 @@ export function Settings() {
               id='shortBreakTime'
               labelText='Descanso curto'
               ref={shortBreakTimeInput}
+              key={`short-${state.config.shortBreakTime}`}
               defaultValue={state.config.shortBreakTime}
               type='number'
             />
@@ -102,6 +115,7 @@ export function Settings() {
               id='longBreakTime'
               labelText='Descanso longo'
               ref={longBreakTimeInput}
+              key={`long-${state.config.longBreakTime}`}
               defaultValue={state.config.longBreakTime}
               type='number'
             />
@@ -109,8 +123,8 @@ export function Settings() {
           <div className='formRow'>
             <DefaultButton
               icon={<SaveIcon />}
-              aria-label='Salvar configurações'
-              title='Salvar configurações'
+              aria-label='Salvar configuracoes'
+              title='Salvar configuracoes'
             />
           </div>
         </form>
