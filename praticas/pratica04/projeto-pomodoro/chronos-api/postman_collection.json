@@ -1,0 +1,96 @@
+{
+  "info": {
+    "name": "Chronos API",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "item": [
+    {
+      "name": "Health Check",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/health"
+      }
+    },
+    {
+      "name": "Buscar Settings",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/settings"
+      }
+    },
+    {
+      "name": "Atualizar Settings",
+      "request": {
+        "method": "PUT",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"workTime\": 30,\n  \"shortBreakTime\": 10,\n  \"longBreakTime\": 20\n}"
+        },
+        "url": "{{baseUrl}}/settings"
+      }
+    },
+    {
+      "name": "Criar Task",
+      "event": [
+        {
+          "listen": "test",
+          "script": {
+            "type": "text/javascript",
+            "exec": [
+              "const json = pm.response.json();",
+              "pm.environment.set('taskId', json.id);"
+            ]
+          }
+        }
+      ],
+      "request": {
+        "method": "POST",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"id\": \"{{$timestamp}}\",\n  \"name\": \"Task via Postman\",\n  \"duration\": 30,\n  \"type\": \"workTime\",\n  \"startDate\": {{$timestamp}}\n}"
+        },
+        "url": "{{baseUrl}}/tasks"
+      }
+    },
+    {
+      "name": "Concluir Task",
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"completeDate\": {{$timestamp}}\n}"
+        },
+        "url": "{{baseUrl}}/tasks/{{taskId}}/complete"
+      }
+    },
+    {
+      "name": "Interromper Task",
+      "request": {
+        "method": "PATCH",
+        "header": [{ "key": "Content-Type", "value": "application/json" }],
+        "body": {
+          "mode": "raw",
+          "raw": "{\n  \"interruptDate\": {{$timestamp}}\n}"
+        },
+        "url": "{{baseUrl}}/tasks/{{taskId}}/interrupt"
+      }
+    },
+    {
+      "name": "Listar Tasks",
+      "request": {
+        "method": "GET",
+        "url": "{{baseUrl}}/tasks"
+      }
+    },
+    {
+      "name": "Limpar Historico",
+      "request": {
+        "method": "DELETE",
+        "url": "{{baseUrl}}/tasks"
+      }
+    }
+  ]
+}
