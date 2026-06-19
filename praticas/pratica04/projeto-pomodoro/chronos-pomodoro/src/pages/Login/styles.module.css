@@ -1,0 +1,182 @@
+.pageShell {
+  --login-bg: #f6f7fb;
+  --login-surface: #ffffff;
+  --login-surface-soft: #eef5f4;
+  --login-text: #1f2933;
+  --login-muted: #657386;
+  --login-primary: #116b63;
+  --login-primary-dark: #0b4d47;
+  --login-accent: #d45d4c;
+  --login-warning: #f2b84b;
+  --login-success: #16805d;
+  --login-danger: #b93d45;
+  --login-border: #d9e2e7;
+  --login-shadow: 0 2.4rem 7rem rgba(31, 41, 51, 0.13);
+
+  display: grid;
+  min-height: 100vh;
+  place-items: center;
+  padding: 3.2rem 1.8rem;
+  background:
+    linear-gradient(135deg, rgba(17, 107, 99, 0.11), transparent 36%),
+    linear-gradient(315deg, rgba(212, 93, 76, 0.12), transparent 34%),
+    var(--login-bg);
+  color: var(--login-text);
+}
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 0.9fr) minmax(34rem, 44rem);
+  width: min(104rem, 100%);
+  overflow: hidden;
+  border: 1px solid rgba(217, 226, 231, 0.78);
+  border-radius: 0.8rem;
+  background: var(--login-surface);
+  box-shadow: var(--login-shadow);
+}
+
+.brandPanel {
+  display: flex;
+  min-height: 62rem;
+  flex-direction: column;
+  justify-content: space-between;
+  padding: 4.4rem;
+  background:
+    linear-gradient(140deg, rgba(17, 107, 99, 0.93), rgba(11, 77, 71, 0.95)),
+    radial-gradient(circle at 82% 18%, rgba(242, 184, 75, 0.38), transparent 31%);
+  color: #f8fbfb;
+}
+
+.brandMark {
+  display: inline-grid;
+  width: 7.6rem;
+  height: 7.6rem;
+  place-items: center;
+  border-radius: 2.4rem;
+  background: rgba(255, 255, 255, 0.14);
+  box-shadow: 0 1.8rem 4rem rgba(8, 40, 37, 0.22);
+}
+
+.brandMark img {
+  width: 5.8rem;
+  height: 5.8rem;
+}
+
+.brandPanel h1 {
+  max-width: 50rem;
+  margin: 3.4rem 0 1.6rem;
+  font-size: clamp(3.6rem, 5vw, 4.8rem);
+  line-height: 0.95;
+  letter-spacing: 0;
+}
+
+.brandPanel p {
+  max-width: 43rem;
+  margin: 0;
+  color: rgba(248, 251, 251, 0.78);
+  font-size: 1.7rem;
+  line-height: 1.7;
+}
+
+.statusRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 1.2rem;
+  margin-top: 3.8rem;
+}
+
+.statusRow span {
+  border: 1px solid rgba(255, 255, 255, 0.25);
+  border-radius: 999px;
+  padding: 1rem 1.4rem;
+  background: rgba(255, 255, 255, 0.09);
+  color: rgba(248, 251, 251, 0.9);
+  font-size: 1.4rem;
+}
+
+.loginPanel {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 4.4rem;
+}
+
+.panelKicker {
+  margin: 0 0 0.8rem;
+  color: var(--login-primary);
+  font-size: 1.25rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.loginPanel h2 {
+  margin: 0 0 1.2rem;
+  color: var(--login-text);
+  font-size: clamp(2.8rem, 4vw, 3.4rem);
+  letter-spacing: 0;
+}
+
+.loginPanel > p:not(.panelKicker) {
+  margin: 0 0 2.8rem;
+  color: var(--login-muted);
+  line-height: 1.55;
+}
+
+.primaryButton {
+  width: 100%;
+  min-height: 5rem;
+  border: 0;
+  border-radius: 0.8rem;
+  margin-top: 0.4rem;
+  background: var(--login-primary);
+  color: #fff;
+  font: inherit;
+  font-weight: 800;
+  transition:
+    transform 0.2s ease,
+    background 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.primaryButton:hover,
+.primaryButton:focus-visible {
+  background: var(--login-primary-dark);
+  box-shadow: 0 1.2rem 2.2rem rgba(17, 107, 99, 0.2);
+  transform: translateY(-1px);
+}
+
+.mockAccess {
+  border-top: 1px solid var(--login-border);
+  margin-top: 2.6rem;
+  padding-top: 1.8rem;
+  color: var(--login-muted);
+  font-size: 1.4rem;
+  line-height: 1.45;
+}
+
+@media (max-width: 820px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  .brandPanel {
+    min-height: auto;
+    padding: 3.2rem;
+  }
+
+  .loginPanel {
+    padding: 3.2rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .pageShell {
+    padding: 1.6rem;
+  }
+
+  .brandPanel,
+  .loginPanel {
+    padding: 2.4rem;
+  }
+}
